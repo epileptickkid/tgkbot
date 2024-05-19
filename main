@@ -1,0 +1,431 @@
+import telebot
+from telebot import types
+import webbrowser
+import random
+import multiprocessing.pool, requests, bs4, lxml, re
+
+TOKEN = "7038739159:AAHW2ry__KRmGIFJVnmhvnyLQwKxZF-0_5E"
+
+
+
+
+
+bot = telebot.TeleBot(TOKEN)
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    keyboard = types.InlineKeyboardMarkup()
+    button1 = types.InlineKeyboardButton(text="Tech", callback_data="button1")
+    button2 = types.InlineKeyboardButton(text="Music", callback_data="button2")
+    button3 = types.InlineKeyboardButton(text="Media", callback_data="button3")
+    button4 = types.InlineKeyboardButton(text="Hobby", callback_data="button4")
+    button5 = types.InlineKeyboardButton(text="Policy", callback_data="button5")
+    button6 = types.InlineKeyboardButton(text="Fashion", callback_data="button6")
+    keyboard.add(button1, button2,button3,button4,button5,button6)
+    bot.send_photo(message.chat.id, open('loop.jpg', 'rb'), caption="Choose an option:", reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+
+    pnk = ['https://tlgrm.ru/channels/news']
+    pblk = ['https://tlgrm.ru/channels/economics']
+    pbrk = ['https://tlgrm.ru/channels/economics']
+
+    hblk =['https://tlgrm.ru/channels/fitness']
+    hnk=['https://tlgrm.ru/channels/travel']
+    hbrk=['https://tlgrm.ru/channels/video']
+
+    fnk=['https://tlgrm.ru/channels/beauty']
+    fbrk=['https://t.me/ushatavainside','https://t.me/bewithyuliawave','https://t.me/limeofficial']
+
+    words = ['@' + chr(92) + 'w' + '+']
+    def Match(url):
+        try:
+            text = requests.get(url).text
+            soup = bs4.BeautifulSoup(text, 'lxml')
+            result = set()
+            for word in words:
+                result.update(re.findall(word, text))
+            return list(result)
+        except Exception as ex:
+            return [str(ex)]
+        finally:
+            print('', end='', flush=True)
+
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, pnk)
+    policy_news_katalog = list(set(word for sublist in results for word in sublist))
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, pblk)
+    policy_blog_katalog = list(set(word for sublist in results for word in sublist))
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, pbrk)
+    policy_brand_katalog = list(set(word for sublist in results for word in sublist))
+
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, hblk)
+    hobby_blog_katalog = list(set(word for sublist in results for word in sublist))
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, hnk)
+    hobby_news_katalog = list(set(word for sublist in results for word in sublist))
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, hbrk)
+    hobby_publish_katalog = list(set(word for sublist in results for word in sublist))
+
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, fnk)
+    fashion_news_katalog = list(set(word for sublist in results for word in sublist))
+    with multiprocessing.pool.ThreadPool(20) as pool:
+        results = pool.map(Match, fbrk)
+    fashion_brand_katalog = list(set(word for sublist in results for word in sublist))
+
+    tech_blog_katalog  =  ['@Wylsared','@rbtshki','@filatovTIMES','@artlebedev','@addmeto','@thedise','@howdyho_official','@jolybells','@IgorLinkChannel']
+    tech_news_katalog  =  ['@robotsymphony','@d_code','@rozetked','@techno_yandex','@tginfo','@frontendnoteschannel_ru','@trashbox_feed']
+    tech_brand_katalog =  ['@hyperpc', '@yandex','@habr_com','@restore_ru','@geekbrains_ru','@mtsofficial','@rkn_tg']
+
+    music_blog_katalog = ['@mudotalida','@tapokmusic','@rusmaneskin','@DKNASASAL','@mazellovvv','@lspof','@antihype_kpss','@femloveumer','@hiinterworld','','','','']
+    music_news_katalog = ['','','','','','','','','','','','','']
+    music_brand_katalog= ['@muztv','@rutv_news','@toastermag','@acidhouze','@firmamelodiya','','','','','','','','']
+
+    media_blog_katalog   = ['@dyrachyo','@razeking','@dx44444444','@sereggadota','@psychoeblans','@Sharon_AL','@reicxz','@serega_pirat2','@ymmaariii','@thousandcursedenemies','@zxcursed','@mazellovvv','@akumaqqe']
+    media_news_katalog   = ['@m0NESYGG','@gabenews','@dotairy','','','','','','','','','','']
+    media_publish_katalog  = ['@andmems','@cybercatstudio','@APhoenixVoice','@ildar_bro_1','','','','','','','','']
+
+    fashion_blog_katalog = ['@psycholiveq','@kusakabe','@princeonyou','@aokigaharaqque','@hatredd888','@darkcnvlsv','','','','','','','']
+
+
+
+    if call.data == "button1": #tech
+        keyboard = types.InlineKeyboardMarkup()
+        button10 = types.InlineKeyboardButton(text="Blog", callback_data="button10")
+        button11 = types.InlineKeyboardButton(text="News", callback_data="button11")
+        button12 = types.InlineKeyboardButton(text="Brand", callback_data="button12")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button10, button11,button12, back)
+        bot.send_photo(call.message.chat.id, open('tech_icon.jpg', 'rb'), caption="Choose next option:", reply_markup=keyboard)
+    elif call.data == "button10":
+        keyboard = types.InlineKeyboardMarkup()
+        back1 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next10 = types.InlineKeyboardButton(text="Next", callback_data="Next10")
+        keyboard.add(back1, next10)
+        bot.send_message(call.message.chat.id, f'Maybe this: {tech_blog_katalog[random.randint(0, len(tech_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next10":
+        keyboard = types.InlineKeyboardMarkup()
+        back1 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next10 = types.InlineKeyboardButton(text="Next", callback_data="Next10")
+        keyboard.add(back1, next10)
+        bot.send_message(call.message.chat.id, f'Maybe this: {tech_blog_katalog[random.randint(0, len(tech_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button11":
+        keyboard = types.InlineKeyboardMarkup()
+        back1 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next11 = types.InlineKeyboardButton(text="Next", callback_data="Next11")
+        keyboard.add(back1, next11)
+        bot.send_message(call.message.chat.id, f'Maybe this: {tech_news_katalog[random.randint(0, len(tech_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next11":
+        keyboard = types.InlineKeyboardMarkup()
+        back1 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next11 = types.InlineKeyboardButton(text="Next", callback_data="Next11")
+        keyboard.add(back1, next11)
+        bot.send_message(call.message.chat.id, f'Maybe this: {tech_news_katalog[random.randint(0, len(tech_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button12":
+        keyboard = types.InlineKeyboardMarkup()
+        back1 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next12 = types.InlineKeyboardButton(text="Next", callback_data="Next12")
+        keyboard.add(back1, next12)
+        bot.send_message(call.message.chat.id, f'Maybe this: {tech_brand_katalog[random.randint(0, len(tech_brand_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next12":
+        keyboard = types.InlineKeyboardMarkup()
+        back1 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next12 = types.InlineKeyboardButton(text="Next", callback_data="Next12")
+        keyboard.add(back1, next12)
+        bot.send_message(call.message.chat.id, f'Maybe this: {tech_brand_katalog[random.randint(0, len(tech_brand_katalog)-1)]}', reply_markup=keyboard)
+
+
+    elif call.data == "button2": #music
+        keyboard = types.InlineKeyboardMarkup()
+        button20 = types.InlineKeyboardButton(text="Blog", callback_data="button20")
+        button21 = types.InlineKeyboardButton(text="News", callback_data="button21")
+        button22 = types.InlineKeyboardButton(text="Play", callback_data="button22")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button20, button21,button22, back)
+        bot.send_photo(call.message.chat.id, open('music_icon.jpg', 'rb'), caption="Choose next option:", reply_markup=keyboard)
+    elif call.data == "button20":
+        keyboard = types.InlineKeyboardMarkup()
+        back2 = types.InlineKeyboardButton(text="Back", callback_data="Back2")
+        next20 = types.InlineKeyboardButton(text="Next", callback_data="Next20" )
+        keyboard.add(back2, next20)
+        bot.send_message(call.message.chat.id, f'Maybe this: {music_blog_katalog[random.randint(0, len(music_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next20":
+        keyboard = types.InlineKeyboardMarkup()
+        back2 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next20 = types.InlineKeyboardButton(text="Next", callback_data="Next20")
+        keyboard.add(back2, next20)
+        bot.send_message(call.message.chat.id,f'Maybe this: {music_blog_katalog[random.randint(0, len(music_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button21":
+        keyboard = types.InlineKeyboardMarkup()
+        back2 = types.InlineKeyboardButton(text="Back", callback_data="Back2")
+        next21 = types.InlineKeyboardButton(text="Next", callback_data="Next21")
+        keyboard.add(back2, next21)
+        bot.send_message(call.message.chat.id, f'Maybe this: {music_news_katalog[random.randint(0, len(music_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next21":
+        keyboard = types.InlineKeyboardMarkup()
+        back2 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next21 = types.InlineKeyboardButton(text="Next", callback_data="Next21")
+        keyboard.add(back2, next21)
+        bot.send_message(call.message.chat.id,f'Maybe this: {music_news_katalog[random.randint(0, len(music_news_katalog) - 1)]}',reply_markup=keyboard)
+    elif call.data == "button22":
+        keyboard = types.InlineKeyboardMarkup()
+        back2 = types.InlineKeyboardButton(text="Back", callback_data="Back2")
+        next22 = types.InlineKeyboardButton(text="Next", callback_data="Next22")
+        keyboard.add(back2, next22)
+        bot.send_message(call.message.chat.id, f'Maybe this: {music_brand_katalog[random.randint(0, len(music_brand_katalog) - 1)]}', reply_markup=keyboard)
+    elif call.data == "Next22":
+        keyboard = types.InlineKeyboardMarkup()
+        back2 = types.InlineKeyboardButton(text="Back", callback_data="Back1")
+        next22 = types.InlineKeyboardButton(text="Next", callback_data="Next22")
+        bot.send_message(call.message.chat.id,f'Maybe this: {music_brand_katalog[random.randint(0, len(music_brand_katalog) - 1)]}', reply_markup=keyboard)
+        keyboard.add(back2, next22)
+
+
+    elif call.data == "button3": #media
+        keyboard = types.InlineKeyboardMarkup()
+        button30 = types.InlineKeyboardButton(text="Blog", callback_data="button30")
+        button31 = types.InlineKeyboardButton(text="News", callback_data="button31")
+        button32 = types.InlineKeyboardButton(text="Publish", callback_data="button32")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button30, button31,button32,back)
+        bot.send_photo(call.message.chat.id, open('media_icon.webp', 'rb'), caption="Choose next option:", reply_markup=keyboard)
+    elif call.data == "button30":
+        keyboard = types.InlineKeyboardMarkup()
+        back3 = types.InlineKeyboardButton(text="Back", callback_data="Back3")
+        next30=types.InlineKeyboardButton(text="Next", callback_data="Next30")
+        keyboard.add(back3,next30)
+        bot.send_message(call.message.chat.id, f'Maybe this: {media_blog_katalog[random.randint(0, len(media_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next30":
+        keyboard = types.InlineKeyboardMarkup()
+        back3 = types.InlineKeyboardButton(text="Back", callback_data="Back3")
+        next30=types.InlineKeyboardButton(text="Next", callback_data="Next30")
+        keyboard.add(back3,next30)
+        bot.send_message(call.message.chat.id, f'Maybe this: {media_blog_katalog[random.randint(0, len(media_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button31":
+        keyboard = types.InlineKeyboardMarkup()
+        back3 = types.InlineKeyboardButton(text="Back", callback_data="Back3")
+        next31 = types.InlineKeyboardButton(text="Next", callback_data="Next31")
+        keyboard.add(back3, next31)
+        bot.send_message(call.message.chat.id, f'Maybe this: {media_news_katalog[random.randint(0, len(media_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next31":
+        keyboard = types.InlineKeyboardMarkup()
+        back3 = types.InlineKeyboardButton(text="Back", callback_data="Back3")
+        next31=types.InlineKeyboardButton(text="Next", callback_data="Next31")
+        keyboard.add(back3,next31)
+        bot.send_message(call.message.chat.id, f'Maybe this: {media_news_katalog[random.randint(0, len(media_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button32":
+        keyboard = types.InlineKeyboardMarkup()
+        back3 = types.InlineKeyboardButton(text="Back", callback_data="Back3")
+        next32 = types.InlineKeyboardButton(text="Next", callback_data="Next32")
+        keyboard.add(back3,next32)
+        bot.send_message(call.message.chat.id, f'Maybe this: {media_publish_katalog[random.randint(0, len(media_publish_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next32":
+        keyboard = types.InlineKeyboardMarkup()
+        back3 = types.InlineKeyboardButton(text="Back", callback_data="Back3")
+        next32=types.InlineKeyboardButton(text="Next", callback_data="Next32")
+        keyboard.add(back3,next32)
+        bot.send_message(call.message.chat.id, f'Maybe this: {media_publish_katalog[random.randint(0, len(media_publish_katalog)-1)]}', reply_markup=keyboard)
+
+
+    elif call.data == "button4": #hobby
+        keyboard = types.InlineKeyboardMarkup()
+        button40 = types.InlineKeyboardButton(text="Blog", callback_data="button40")
+        button41 = types.InlineKeyboardButton(text="News", callback_data="button41")
+        button42 = types.InlineKeyboardButton(text="Publish", callback_data="button42")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button40, button41,button42,back)
+        bot.send_photo(call.message.chat.id, open('hobby_icon.png', 'rb'), caption="Choose next option:", reply_markup=keyboard)
+    elif call.data == "button40":
+        keyboard = types.InlineKeyboardMarkup()
+        back4 = types.InlineKeyboardButton(text="Back", callback_data="Back4")
+        next40 = types.InlineKeyboardButton(text="Next", callback_data="Next40")
+        keyboard.add(back4, next40)
+        bot.send_message(call.message.chat.id, f'Maybe this: {hobby_blog_katalog[random.randint(0, len(hobby_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next40":
+        keyboard = types.InlineKeyboardMarkup()
+        back4 = types.InlineKeyboardButton(text="Back", callback_data="Back4")
+        next40 = types.InlineKeyboardButton(text="Next", callback_data="Next40")
+        keyboard.add(back4, next40)
+        bot.send_message(call.message.chat.id, f'Maybe this: {hobby_blog_katalog[random.randint(0, len(hobby_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button41":
+        keyboard = types.InlineKeyboardMarkup()
+        back4 = types.InlineKeyboardButton(text="Back", callback_data="Back4")
+        next41 = types.InlineKeyboardButton(text="Next", callback_data="Next41")
+        keyboard.add(back4,next41)
+        bot.send_message(call.message.chat.id, f'Maybe this: {hobby_news_katalog[random.randint(0, len(hobby_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next41":
+        keyboard = types.InlineKeyboardMarkup()
+        back4 = types.InlineKeyboardButton(text="Back", callback_data="Back4")
+        next41 = types.InlineKeyboardButton(text="Next", callback_data="Next41")
+        keyboard.add(back4,next41)
+        bot.send_message(call.message.chat.id, f'Maybe this: {hobby_news_katalog[random.randint(0, len(hobby_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button42":
+        keyboard = types.InlineKeyboardMarkup()
+        back4 = types.InlineKeyboardButton(text="Back", callback_data="Back4")
+        next42= types.InlineKeyboardButton(text="Next", callback_data="Next42")
+        keyboard.add(back4,next42)
+        bot.send_message(call.message.chat.id, f'Maybe this: {hobby_publish_katalog[random.randint(0, len(hobby_publish_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next42":
+        keyboard = types.InlineKeyboardMarkup()
+        back4 = types.InlineKeyboardButton(text="Back", callback_data="Back4")
+        next42= types.InlineKeyboardButton(text="Next", callback_data="Next42")
+        keyboard.add(back4,next42)
+        bot.send_message(call.message.chat.id, f'Maybe this: {hobby_publish_katalog[random.randint(0, len(hobby_publish_katalog)-1)]}', reply_markup=keyboard)
+
+
+    elif call.data == "button5": #policy
+        keyboard = types.InlineKeyboardMarkup()
+        button50 = types.InlineKeyboardButton(text="Blog", callback_data="button50")
+        button51 = types.InlineKeyboardButton(text="News", callback_data="button51")
+        button52 = types.InlineKeyboardButton(text="Brands", callback_data="button52")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button50, button51,button52,back)
+        bot.send_photo(call.message.chat.id, open('policy_icon.jpg', 'rb'), caption="Choose next option:", reply_markup=keyboard)
+    elif call.data == "button50":
+        keyboard = types.InlineKeyboardMarkup()
+        back5 = types.InlineKeyboardButton(text="Back", callback_data="Back5")
+        next50 = types.InlineKeyboardButton(text="Next", callback_data="Next50")
+        keyboard.add(back5,next50)
+        bot.send_message(call.message.chat.id, f'Maybe this: {policy_blog_katalog[random.randint(0, len(policy_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next50":
+        keyboard = types.InlineKeyboardMarkup()
+        back5 = types.InlineKeyboardButton(text="Back", callback_data="Back5")
+        next50 = types.InlineKeyboardButton(text="Next", callback_data="Next50")
+        keyboard.add(back5,next50)
+        bot.send_message(call.message.chat.id, f'Maybe this: {policy_blog_katalog[random.randint(0, len(policy_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button51":
+        keyboard = types.InlineKeyboardMarkup()
+        back5 = types.InlineKeyboardButton(text="Back", callback_data="Back5")
+        next51 = types.InlineKeyboardButton(text="Next", callback_data="Next51")
+        keyboard.add(back5,next51)
+        bot.send_message(call.message.chat.id, f'Maybe this: {policy_news_katalog[random.randint(0, len(policy_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next51":
+        keyboard = types.InlineKeyboardMarkup()
+        back5 = types.InlineKeyboardButton(text="Back", callback_data="Back5")
+        next51 = types.InlineKeyboardButton(text="Next", callback_data="Next51")
+        keyboard.add(back5,next51)
+        bot.send_message(call.message.chat.id, f'Maybe this: {policy_news_katalog[random.randint(0, len(policy_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button52":
+        keyboard = types.InlineKeyboardMarkup()
+        back5 = types.InlineKeyboardButton(text="Back", callback_data="Back5")
+        next52 = types.InlineKeyboardButton(text="Next", callback_data="Next52")
+        keyboard.add(back5, next52)
+        bot.send_message(call.message.chat.id, f'Maybe this: {policy_brand_katalog[random.randint(0, len(policy_brand_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next52":
+        keyboard = types.InlineKeyboardMarkup()
+        back5 = types.InlineKeyboardButton(text="Back", callback_data="Back5")
+        next52 = types.InlineKeyboardButton(text="Next", callback_data="Next52")
+        keyboard.add(back5,next52)
+        bot.send_message(call.message.chat.id, f'Maybe this: {policy_brand_katalog[random.randint(0, len(policy_brand_katalog)-1)]}', reply_markup=keyboard)
+
+
+    elif call.data == "button6": #fashion
+        keyboard = types.InlineKeyboardMarkup()
+        button60 = types.InlineKeyboardButton(text="Blog", callback_data="button60")
+        button61 = types.InlineKeyboardButton(text="News", callback_data="button61")
+        button62 = types.InlineKeyboardButton(text="Brands", callback_data="button62")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button60, button61,button62,back)
+        bot.send_photo(call.message.chat.id, open('fashion_icon.jpg', 'rb'), caption="Choose next option:", reply_markup=keyboard)
+    elif call.data == "button60":
+        keyboard = types.InlineKeyboardMarkup()
+        back6 = types.InlineKeyboardButton(text="Back", callback_data="Back6")
+        next60 = types.InlineKeyboardButton(text="Next", callback_data="Next60")
+        keyboard.add(back6,next60)
+        bot.send_message(call.message.chat.id, f'Maybe this: {fashion_blog_katalog[random.randint(0, len(fashion_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next60":
+        keyboard = types.InlineKeyboardMarkup()
+        back6 = types.InlineKeyboardButton(text="Back", callback_data="Back6")
+        next60 = types.InlineKeyboardButton(text="Next", callback_data="Next60")
+        keyboard.add(back6,next60)
+        bot.send_message(call.message.chat.id, f'Maybe this: {fashion_blog_katalog[random.randint(0, len(fashion_blog_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button61":
+        keyboard = types.InlineKeyboardMarkup()
+        back6 = types.InlineKeyboardButton(text="Back", callback_data="Back6")
+        next61 = types.InlineKeyboardButton(text="Next", callback_data="Next61")
+        keyboard.add(back6,next61)
+        bot.send_message(call.message.chat.id, f'Maybe this: {fashion_news_katalog[random.randint(0, len(fashion_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next61":
+        keyboard = types.InlineKeyboardMarkup()
+        back6 = types.InlineKeyboardButton(text="Back", callback_data="Back6")
+        next61 = types.InlineKeyboardButton(text="Next", callback_data="Next61")
+        keyboard.add(back6,next61)
+        bot.send_message(call.message.chat.id, f'Maybe this: {fashion_news_katalog[random.randint(0, len(fashion_news_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "button62":
+        keyboard = types.InlineKeyboardMarkup()
+        back6 = types.InlineKeyboardButton(text="Back", callback_data="Back6")
+        next62 = types.InlineKeyboardButton(text="Next", callback_data="Next62")
+        keyboard.add(back6, next62)
+        bot.send_message(call.message.chat.id, f'Maybe this: {fashion_brand_katalog[random.randint(0, len(fashion_brand_katalog)-1)]}', reply_markup=keyboard)
+    elif call.data == "Next62":
+        keyboard = types.InlineKeyboardMarkup()
+        back6 = types.InlineKeyboardButton(text="Back", callback_data="Back6")
+        next62 = types.InlineKeyboardButton(text="Next", callback_data="Next62")
+        keyboard.add(back6,next62)
+        bot.send_message(call.message.chat.id, f'Maybe this: {fashion_brand_katalog[random.randint(0, len(fashion_brand_katalog)-1)]}', reply_markup=keyboard)
+
+
+    elif call.data == 'Back':
+        keyboard = types.InlineKeyboardMarkup()
+        button1 = types.InlineKeyboardButton(text="Tech", callback_data="button1")
+        button2 = types.InlineKeyboardButton(text="Travel", callback_data="button2")
+        button3 = types.InlineKeyboardButton(text="Food", callback_data="button3")
+        button4 = types.InlineKeyboardButton(text="Hobby", callback_data="button4")
+        button5 = types.InlineKeyboardButton(text="Policy", callback_data="button5")
+        keyboard.add(button1, button2, button3, button4, button5)
+        bot.send_message(call.message.chat.id, "You are back in the main menu", reply_markup=keyboard)
+    elif call.data == 'Back1':
+        keyboard = types.InlineKeyboardMarkup()
+        button10 = types.InlineKeyboardButton(text="Blog", callback_data="button10")
+        button11 = types.InlineKeyboardButton(text="News", callback_data="button11")
+        button12 = types.InlineKeyboardButton(text="Brand", callback_data="button12")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button10, button11, button12, back)
+        bot.send_photo(call.message.chat.id, open('tech_icon.jpg', 'rb'), caption="Tech: choose next option:", reply_markup=keyboard)
+    elif call.data == 'Back2':
+        keyboard = types.InlineKeyboardMarkup()
+        button20 = types.InlineKeyboardButton(text="Blog", callback_data="button20")
+        button21 = types.InlineKeyboardButton(text="News", callback_data="button21")
+        button22 = types.InlineKeyboardButton(text="Play", callback_data="button22")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button20, button21, button22, back)
+        bot.send_photo(call.message.chat.id, open('music_icon.jpg', 'rb'), caption="Music: choose another option:", reply_markup=keyboard)
+    elif call.data == 'Back3':
+        keyboard = types.InlineKeyboardMarkup()
+        button30 = types.InlineKeyboardButton(text="Blog", callback_data="button30")
+        button31 = types.InlineKeyboardButton(text="News", callback_data="button31")
+        button32 = types.InlineKeyboardButton(text="Publish", callback_data="button32")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button30, button31, button32, back)
+        bot.send_photo(call.message.chat.id, open('media_icon.webp', 'rb'), caption="Media: choose another option:", reply_markup=keyboard)
+    elif call.data == 'Back4':
+        keyboard = types.InlineKeyboardMarkup()
+        button40 = types.InlineKeyboardButton(text="Blog", callback_data="button40")
+        button41 = types.InlineKeyboardButton(text="News", callback_data="button41")
+        button42 = types.InlineKeyboardButton(text="Brands", callback_data="button42")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button40, button41, button42, back)
+        bot.send_photo(call.message.chat.id, open('hobby_icon.png', 'rb'), caption="Hobby: choose next option:", reply_markup=keyboard)
+    elif call.data == 'Back5':
+        keyboard = types.InlineKeyboardMarkup()
+        button50 = types.InlineKeyboardButton(text="Blog", callback_data="button50")
+        button51 = types.InlineKeyboardButton(text="News", callback_data="button51")
+        button52 = types.InlineKeyboardButton(text="Brands", callback_data="button52")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button50, button51, button52, back)
+        bot.send_photo(call.message.chat.id, open('policy_icon.jpg', 'rb'), caption="Policy: choose another option:", reply_markup=keyboard)
+    elif call.data == 'Back6':
+        keyboard = types.InlineKeyboardMarkup()
+        button60 = types.InlineKeyboardButton(text="Blog", callback_data="button60")
+        button61 = types.InlineKeyboardButton(text="News", callback_data="button61")
+        button62 = types.InlineKeyboardButton(text="Brands", callback_data="button62")
+        back = types.InlineKeyboardButton(text="Back", callback_data="Back")
+        keyboard.add(button60, button61, button62, back)
+        bot.send_photo(call.message.chat.id, open('fashion_icon.jpg', 'rb'), caption="Fashion: choose another option:", reply_markup=keyboard)
+
+bot.polling()
