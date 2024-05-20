@@ -373,12 +373,13 @@ def callback_query(call):
     elif call.data == 'Back':
         keyboard = types.InlineKeyboardMarkup()
         button1 = types.InlineKeyboardButton(text="Tech", callback_data="button1")
-        button2 = types.InlineKeyboardButton(text="Travel", callback_data="button2")
-        button3 = types.InlineKeyboardButton(text="Food", callback_data="button3")
+        button2 = types.InlineKeyboardButton(text="Music", callback_data="button2")
+        button3 = types.InlineKeyboardButton(text="Media", callback_data="button3")
         button4 = types.InlineKeyboardButton(text="Hobby", callback_data="button4")
         button5 = types.InlineKeyboardButton(text="Policy", callback_data="button5")
-        keyboard.add(button1, button2, button3, button4, button5)
-        bot.send_message(call.message.chat.id, "You are back in the main menu", reply_markup=keyboard)
+        button6 = types.InlineKeyboardButton(text="Fashion", callback_data="button6")
+        keyboard.add(button1, button2, button3, button4, button5, button6)
+        bot.send_photo(call.message.chat.id, open('loop.jpg', 'rb'), caption="You are back in the main menu", reply_markup=keyboard)
     elif call.data == 'Back1':
         keyboard = types.InlineKeyboardMarkup()
         button10 = types.InlineKeyboardButton(text="Blog", callback_data="button10")
